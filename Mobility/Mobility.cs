@@ -13,7 +13,8 @@ public class Mobility : BaseUnityPlugin
     private static Harmony? Harmony { get; set; }
     private static bool IsPatched { get; set; }
 
-    public static ConfigEntry<bool>? UseStaminaSystem { get; private set; }
+    public static ConfigEntry<bool>? EnableStaminaSystem { get; private set; }
+    public static ConfigEntry<bool>? EnableStaminaBar { get; private set; }
 
     private void Awake()
     {
@@ -23,8 +24,10 @@ public class Mobility : BaseUnityPlugin
 
         Harmony = new Harmony(PluginInfo.PLUGIN_GUID);
 
-        UseStaminaSystem = Config.Bind("General", "UseStaminaSystem", true,
+        EnableStaminaSystem = Config.Bind("General", "UseStaminaSystem", true,
             "Whether to use the stamina system. If disabled, you will be able to sprint infinitely.");
+        EnableStaminaBar = Config.Bind("General", "UseStaminaBar", true,
+            "Whether to show the stamina bar. If disabled, you will not see the stamina bar.");
 
         PatchAll();
 

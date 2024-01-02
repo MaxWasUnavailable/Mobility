@@ -14,6 +14,7 @@ internal static class RigidbodyControllerCPatches
     private static float _originalSpeed;
     private static float _originalMaxVelocityChange;
     private static bool _didSprint = false;
+    private static Canvas? _staminaCanvas;
 
     [HarmonyPatch("Awake")]
     [HarmonyPostfix]
@@ -23,6 +24,18 @@ internal static class RigidbodyControllerCPatches
         _originalMaxVelocityChange = __instance.maxVelocityChange;
         __instance.canJump = true;
         Stamina.ResetStamina();
+    }
+    
+    [HarmonyPatch("Awake")]
+    [HarmonyPostfix]
+    private static void AddStaminaUI(RigidbodyControllerC __instance)
+    {
+        if (!Mobility.EnableStaminaSystem!.Value || !Mobility.EnableStaminaBar!.Value) return;
+        if (_staminaCanvas != null) return;
+        _staminaCanvas = new GameObject("StaminaCanvas").AddComponent<Canvas>();
+        _staminaCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        _staminaCanvas.worldCamera = Camera.main;
+        _staminaCanvas.gameObject.AddComponent<StaminaBar>();
     }
 
     [HarmonyPatch("FixedUpdate")]
@@ -39,7 +52,7 @@ internal static class RigidbodyControllerCPatches
 
     private static void HandleSprinting(RigidbodyControllerC instance)
     {
-        if ((Stamina.CanSprint() || !Mobility.UseStaminaSystem!.Value) && Input.GetKey(KeyCode.LeftShift))
+        if ((Stamina.CanSprint() || !Mobility.EnableStaminaSystem!.Value) && Input.GetKey(KeyCode.LeftShift))
         {
             instance.maxVelocityChange = _originalMaxVelocityChange * SprintSpeedMultiplier;
             instance.speed = _originalSpeed * SprintSpeedMultiplier;

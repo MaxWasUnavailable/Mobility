@@ -6,10 +6,10 @@ namespace Mobility.Features;
 /// </summary>
 internal static class Stamina
 {
-    private const float StaminaRegenerationRate = 0.1f;
-    private const float StaminaConsumptionRate = 0.1f;
-    private const float MaxStamina = 100f;
-    private const int TicksUntilRegeneration = 100;
+    public const float StaminaRegenerationRate = 0.1f;
+    public const float StaminaConsumptionRate = 0.1f;
+    public const float MaxStamina = 100f;
+    public const int TicksUntilRegeneration = 200;
     public static float StaminaValue { get; private set; } = 100f;
     private static int TicksSinceLastSprint { get; set; }
 

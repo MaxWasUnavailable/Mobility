@@ -6,12 +6,14 @@ using UnityEngine;
 
 namespace Mobility.Patches;
 
+
 [HarmonyPatch(typeof(RigidbodyControllerC))]
 internal static class RigidbodyControllerCPatches
 {
     private const float SprintSpeedMultiplier = 1.5f;
     private static float _originalSpeed;
     private static float _originalMaxVelocityChange;
+    private static bool _didSprint = false;
 
     [HarmonyPatch("Awake")]
     [HarmonyPostfix]
@@ -37,21 +39,25 @@ internal static class RigidbodyControllerCPatches
 
     private static void HandleSprinting(RigidbodyControllerC instance)
     {
-        var didSprint = false;
-
         if ((Stamina.CanSprint() || !Mobility.UseStaminaSystem!.Value) && Input.GetKey(KeyCode.LeftShift))
         {
-            didSprint = true;
             instance.maxVelocityChange = _originalMaxVelocityChange * SprintSpeedMultiplier;
             instance.speed = _originalSpeed * SprintSpeedMultiplier;
+            _didSprint = true;
         }
         else
         {
             instance.maxVelocityChange = _originalMaxVelocityChange;
             instance.speed = _originalSpeed;
         }
-
-        Stamina.HandleTick(didSprint);
+    }
+    
+    [HarmonyPatch("FixedUpdate")]
+    [HarmonyPostfix]
+    private static void HandleStamina(RigidbodyControllerC __instance)
+    {
+        Stamina.HandleTick(_didSprint);
+        _didSprint = false;
     }
 
     [HarmonyPatch("FixedUpdate")]

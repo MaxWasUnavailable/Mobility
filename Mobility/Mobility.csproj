@@ -23,6 +23,6 @@
     <ItemGroup>
         <Reference Include="Assembly-CSharp" HintPath="$(JALOPY_REFERENCES)\Assembly-CSharp.dll" Private="False"/>
         <Reference Include="UnityEngine.CoreModule" HintPath="$(JALOPY_REFERENCES)\UnityEngine.CoreModule.dll" Private="False"/>
-        <Reference Include="UnityEngine.CoreModule" HintPath="$(JALOPY_REFERENCES)\UnityEngine.UIElementsModule.dll" Private="False"/>
+        <Reference Include="UnityEngine.UIElementsModule" HintPath="$(JALOPY_REFERENCES)\UnityEngine.UIElementsModule.dll" Private="False"/>
     </ItemGroup>
 </Project>
